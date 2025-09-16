@@ -2,11 +2,13 @@
 
 ## 概要
 リモートでファイル編集した際のコンフリクト解消の手順
+
 ---
 
 ## 目次
 - [コンフリクト解消手順](#コンフリクト解消手順)
   - [コンフリクトの発生](#コンフリクトの発生)
+  - [ローカルとリモートを統合する](#ローカルとリモートを統合する)
 - [gitコマンド](#gitコマンド)
   - [git clone](#git-clone)
   - [3つの基本操作](#3つの基本操作)
@@ -19,14 +21,27 @@
 # <a id="コンフリクト解消手順" style="color: #000; border:">コンフリクト解消手順</a>
 
 ## コンフリクトの発生
-  README の編集を例にしているが、何のファイルでも同じ。
 * **リモートでファイルを編集**
-* * ブラウザ上のgithubで README を編集した。
-* **ローカルで同じファイルを編集**
-* * パソコン上のエディタで README を編集した。
-* **リモートにプッシュ**
-* * ローカルでファイルを編集し、プッシュしようとした。[プッシュの手順](#3つの基本操作)
-* * エラー発生！
+  * ブラウザ上のgithubで README を編集した。
+  * 次に、ローカルでファイルを編集し、プッシュしようとした。[プッシュの手順](#3つの基本操作)
+  * エラー発生！
+    ```
+    ! [rejected]        main -> main (fetch first)
+    error: failed to push some refs to 'https://github.com/fujitashuichi/practice-solving-conflict.git'
+    hint: Updates were rejected because the remote contains work that you do
+    hint: not have locally. This is usually caused by another   repository pushing
+    hint: to the same ref. You may want to first integrate the     remote changes
+    hint: (e.g., 'git pull ...') before pushing again.
+    hint: See the 'Note about fast-forwards' in 'git push --help'   for details.
+    ```
+
+## ローカルとリモートを統合する
+* リモートから変更の履歴をとってくる。
+  * ```git fetch ```
+* リモートの変更をローカルにマージする。
+  * ```git merge```
+  *
+
 
 ---
 
