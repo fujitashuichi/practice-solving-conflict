@@ -2,13 +2,15 @@
 
 ## 概要
 リモートでファイル編集した際のコンフリクト解消の手順
+VSCodeのマージエディタを利用してコンフリクトを解消する
 
 ---
 
 ## 目次
-- [コンフリクト解消手順](#コンフリクト解消手順)
-  - [コンフリクトの発生](#コンフリクトの発生)
-  - [ローカルとリモートを統合する](#ローカルとリモートを統合する)
+- [コンフリクト発生と解消手順](#コンフリクト発生と解消手順)
+  - [1.コンフリクト発生](#1コンフリクト発生)
+  - [2.リモートの変更履歴をローカルに引っ張る](#2リモートの変更履歴をローカルに引っ張る)
+  - [3.コンフリクトを解消する](#3コンフリクトを解消する)
 - [gitコマンド](#gitコマンド)
   - [git clone](#git-clone)
   - [3つの基本操作](#3つの基本操作)
@@ -18,30 +20,82 @@
 
 ---
 
-# <a id="コンフリクト解消手順" style="color: #000; border:">コンフリクト解消手順</a>
+# <a id="コンフリクト解消手順" style="color: #000; border:">コンフリクト発生と解消手順</a>
+  ※ README ファイルでコンフリクトが起こった場合を例に挙げる。<br>他のファイルでも手順は同じ。
 
-## コンフリクトの発生
+## 1.コンフリクト発生
 * **リモートでファイルを編集**
   * ブラウザ上のgithubで README を編集した。
-  * 次に、ローカルでファイルを編集し、プッシュしようとした。[プッシュの手順](#3つの基本操作)
+<br>
+* **ローカルでファイルを編集**
+  * ローカルでREADMEを編集し、プッシュした。[プッシュの手順](#3つの基本操作)
   * エラー発生！
     ```
     ! [rejected]        main -> main (fetch first)
     error: failed to push some refs to 'https://github.com/fujitashuichi/practice-solving-conflict.git'
     hint: Updates were rejected because the remote contains work that you do
     hint: not have locally. This is usually caused by another   repository pushing
-    hint: to the same ref. You may want to first integrate the     remote changes
+    hint: to the same ref. You may want to first integrate the remote changes
     hint: (e.g., 'git pull ...') before pushing again.
     hint: See the 'Note about fast-forwards' in 'git push --help'   for details.
     ```
 
-## ローカルとリモートを統合する
-* リモートから変更の履歴をとってくる。
+## 2.リモートの変更履歴をローカルに引っ張る
+* ローカルで何か編集を行った場合、必ず**ローカルの変更を保存**しておく。
+  * ```git add README.md```
+  * ```git commit -m "マージ前のコミット"```
+<br>
+* リモートの変更履歴を取得する。
   * ```git fetch ```
+<br>
 * リモートの変更をローカルにマージする。
   * ```git merge```
-  *
+  * コンフリクトによるエラーが発生する。
+    ```
+    CONFLICT (content): Merge conflict in README.md
+    Automatic merge failed; fix conflicts and then commit the result.
+    ```
+## 3.コンフリクトを解消する
+  * マージエディタを使う。
+    <img src="img/use-marge-editor.jpg">
+    <br>
+    * リモートのファイル、ローカルのファイル、マージ予定のファイルの3つが表示される。
+      <img src="img/merge-editor.png">
+    <br>
+    * ↑リモートとローカルを比較すると、それぞれの変更が矛盾しているのが分かる。
+    競合している部分はエディタが強調してくれる。
+    <br>
+  * **コンフリクト解消**
+    * マージエディタで "結果" の部分 （3つある窓の内の下1つ）を編集する。
+    <img src="img/merge-editor-edit.jpg">
+      * コンフリクトがあると、gitはローカルとリモートどちらの変更を優先すればいいか分からなくなる。
+      * そこで、上画像のように欲しい変更を組み合わせて、ローカルにマージする。
+    <br>
+    * 確認してマージ
+      * "0個の競合" と表示されているのを確認。
+      * "結果" の内容が想定した内容になっているのを確認。
+      * "マージの完了" ボタンをクリックする。
+    <br>
 
+  * マージコミット
+    * "マージの完了" で自動でコミットが行われているか確認する。
+      * ```git log``` でコミットされているか確認。
+      * コミットされていなかったときや、<ins>※確認が面倒なとき</ins>は、手動でコミットを行う。
+
+      <div style="border: solid 2px #ff0000; margin-top: 15px; padding: 5px 15px;">
+        ※ 自分一人のものでないプロジェクトでは、log確認を怠らず、余計なコミットを作らないようにしなくてはならない。
+      </div>
+    <br>
+
+    * 手動でコミット
+      * ```git add README.md```
+      * ```git commit -m "FIX: コンフリクト解消後のマージコミット"```
+    <br>
+
+  * プッシュ
+    * ```git push origin main```
+      または
+    * "変更の同期" ボタンをクリック
 
 ---
 
